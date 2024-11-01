@@ -1,0 +1,28 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "3c731f3ceefc2ec8960f34f2ea6064d4"
+name = "discount in cart"
+handle = "discount-in-cart-5"
+application_url = "https://producing-know-angry-hampton.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "shayem-hossain.myshopify.com"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://producing-know-angry-hampton.trycloudflare.com/auth/callback",
+  "https://producing-know-angry-hampton.trycloudflare.com/auth/shopify/callback",
+  "https://producing-know-angry-hampton.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-10"
+
+[pos]
+embedded = false
