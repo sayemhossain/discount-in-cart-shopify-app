@@ -21,8 +21,11 @@ import { useEffect, useState } from "react";
 
 export const loader = async ({ request }) => {
   await authenticate.admin(request);
-  const products = await getProductsFromDB();
-  return json({ products });
+  const res = await getProductsFromDB();
+  if (res?.data) {
+    return { products: res.data };
+  }
+  return null;
 };
 
 // Action function to handle product upload and delete
@@ -48,16 +51,13 @@ export const action = async ({ request }) => {
   }
 
   if (request.method === "DELETE" && productId) {
-    try {
-      await deleteProductFromDB(productId);
-      return json({ success: true, message: "Product deleted successfully!" });
-    } catch (error) {
-      console.error("Delete error:", error);
-      return json(
-        { success: false, message: "Failed to delete product." },
-        { status: 500 },
-      );
-    }
+    const response = await deleteProductFromDB(productId);
+    return json({
+      status: response.status,
+      success: response.status,
+      message: response.message,
+      data: response?.data,
+    });
   }
 
   return json({ error: "Method not allowed" }, { status: 405 });
@@ -126,17 +126,18 @@ export default function Products() {
               <ResourceList
                 resourceName={{ singular: "product", plural: "products" }}
                 items={productItems.map((product) => ({
-                  id: product.productId,
+                  id: product.id,
+                  productId: product.productId,
                   title: product.title,
                   vendor: product.vendor,
                   price: product.price,
                   image: product.image,
                 }))}
                 renderItem={(item) => {
-                  const { id, title, vendor, price, image } = item;
+                  const { id, productId, title, vendor, price, image } = item;
 
                   return (
-                    <div key={id} className="product-item">
+                    <div key={productId} className="product-item">
                       <Thumbnail
                         source={image}
                         size="large"
